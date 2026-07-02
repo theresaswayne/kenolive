@@ -91,16 +91,17 @@ for i in range(0, len(C1)):
 	impMerge = RGBStackMerge.mergeChannels(images, False) # much faster than IJ.rum
 	
 	location = C1file.split("_")[0] # part up to the first underscore
-	timepoint = os.path.splitext(C1file.split("_")[5])[0] # last section before the .tif
-	print "Timepoint is", timepoint
-	outputName = string.join((location,"_merge_", timepoint,image_extension), "")
+	#timepoint = os.path.splitext(C1file.split("_")[5])[0] # last section before the .tif
+	#print "Timepoint is", timepoint
+	#outputName = string.join((location,"_merge_", timepoint,image_extension), "")
+	outputName = string.join((location,"_merge",image_extension), "")
 	#print "Output name is", outputName
 	IJ.saveAs(impMerge, "Tiff", os.path.join(outputDir, outputName))
 
 	# clean up
 	# impMerge.flush()
 	# impMerge.close() # throws error
-	impMerge = None #doesn't seem to solve memory problem
+	impMerge = None # doesn't seem to solve memory problem
 	imp1.close()
 	imp2.close()
 	#imp3.close()

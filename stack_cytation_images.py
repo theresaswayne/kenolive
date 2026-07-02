@@ -56,17 +56,31 @@ for stackIndex in range(0,numStacks):
 	#print "First filename:",currentFile
 	
 	imp = IJ.openImage(os.path.join(inputdir, fnames[imageStartIndex])) # open first image
-	ip = imp.getProcessor()
+	#ip = imp.getProcessor()
+	stack = imp.getStack() # supports multichannel composite images
+	
+	
+	
 	new_stack = ImageStack(imp.width, imp.height) # new stack with size based on the image
-	new_stack.addSlice(currentFile, ip) # add the 1st image to the stack
+	for i in range(1, imp.getNSlices()+1):
+		# Get the slice i
+		slice = stack.getProcessor(i)
+		# Store the slice in the new stack, copying the same slice label
+		new_stack.addSlice(stack.getSliceLabel(i), slice)
+	
+	#new_stack.addSlice(currentFile, ip) # add the 1st image to the stack
 	
 	for fnameIndex in range(imageStartIndex + 1, imageEndIndex): # subset of the original array
 		currentFile = os.path.basename(fnames[fnameIndex])
 		#print "Adding image",currentFile
 		imp = IJ.openImage(os.path.join(inputdir, currentFile)) # open next image
-		ip = imp.getProcessor()
-		new_stack.addSlice(currentFile, ip) # slice label is orig file name
-		# --- end stack creation loop
+		stack = imp.getStack() # supports multichannel composite images
+		for i in range(1, imp.getNSlices()+1):
+			# Get the slice i
+			slice = stack.getProcessor(i)
+			# Store the slice in the new stack, copying the same slice label
+			new_stack.addSlice(stack.getSliceLabel(i), slice)
+			# --- end stack creation loop
 	
 	basename = currentFile[0:-8] # assumes 3-digit timepoint plus .tif
 	fileName = string.join((basename, image_extension), "")
