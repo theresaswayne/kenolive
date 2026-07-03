@@ -31,6 +31,9 @@ from fiji.plugin.trackmate.features.track import TrackIndexAnalyzer
 import fiji.plugin.trackmate.visualization.hyperstack.HyperStackDisplayer as HyperStackDisplayer
 import fiji.plugin.trackmate.features.FeatureFilter as FeatureFilter
 
+from fiji.plugin.trackmate.io import CSVExporter
+from fiji.plugin.trackmate.visualization.table import TrackTableView
+
 from fiji.plugin.trackmate.io import TmXmlWriter
 from fiji.plugin.trackmate.util import LogRecorder
 from fiji.plugin.trackmate.tracking.jaqaman import SparseLAPTrackerFactory
@@ -87,7 +90,7 @@ def close_original(imp):
 	print("Original closed.")
 	
 	
-## TrackMate ; overlap tracker
+## TrackMate with LAP tracker
 
 def run_trackmate(imp, channel, min_iou, scale_factor, iou_method):
 	print('Starting TrackMate...')
@@ -191,6 +194,27 @@ ds.setSpotColorBy( TrackMateObject.TRACKS, TrackIndexAnalyzer.TRACK_INDEX )
 displayer =  HyperStackDisplayer( model, selectionModel, imp, ds )
 displayer.render()
 displayer.refresh()
+
+# Export all spots
+out_file_csv = "all_spots.csv"
+only_visible = False # Export only visible 
+# If you set this flag to False, it will include all the spots,
+# the ones not in tracks, and the ones not visible.
+CSVExporter.exportSpots(os.path.join(str(myOutputDir),out_file_csv), model, only_visible )
+
+# Spot table. Will contain only the spots that are in visible tracks.
+spots_in_tracks_table = TrackTableView.createSpotTable( model, ds )
+#spot_table_csv_file = File( input_filename.replace( '.xml', '-spots.csv' ) )
+spots_in_tracks_name = "tracked_spots.csv"
+spots_in_tracks_file = File(os.path.join(str(myOutputDir),spots_in_tracks_name))
+spots_in_tracks_table.exportToCsv( spots_in_tracks_file )
+
+# Track table.
+track_table = TrackTableView.createTrackTable( model, ds )
+tracks_name = "tracks.csv"
+track_table_csv_file = File(os.path.join(str(myOutputDir),tracks_name))
+track_table.exportToCsv( track_table_csv_file )
+
 
 # Echo results with the logger we set at start:
 model.getLogger().log( str( model ) )
