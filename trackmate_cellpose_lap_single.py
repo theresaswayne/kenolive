@@ -1,15 +1,13 @@
-#@ File	(label="Input file", style="open") myInputFile
+#@ File	(label="Input file", style="file") myInputFile
 #@ File	(label="Output directory", style="directory") myOutputDir
-#@ String  (label="Output name", value="tracked") outputName
+#@ String  (label="Output name", value="_tracked") outputName
 #@ String  (label="Channel for segmentation", choices={"0","1","2"}, style="listBox") detectorChannel
-#@ Float   (label="Min IoU", value=0.3, min=0.0, max=1.0) minIoU
-#@ Float   (label="Scale factor", value=1.0, min=0.5, max=2.0) scaleFactor
-#@ String  (label="Methode IoU", choices={"PRECISE","FAST"}, style="listBox") iouMethod
 
 # based on https://forum.image.sc/t/jython-trackmate-cellpose-sam-cpsam-not-found-for-segment/120031/9
 
 import sys
 import os
+import time
 
 from java.io import File
 
@@ -88,11 +86,21 @@ def close_original(imp):
 	imp.close()
 	IJ.run("Collect Garbage")
 	print("Original closed.")
-	
+
+## swap z and t because the stack will default to Z mode
+
+def swap_zt(imp): # requires 2d stack
+    IJ.selectWindow(imp.getTitle())
+    imp.setDimensions(imp.getNChannels(), 1, imp.getNSlices())
+    print("Swapped: (x,y,c,z,t) = %d %d %d %d %d" % (
+        imp.getWidth(), imp.getHeight(),
+        imp.getNChannels(), imp.getNSlices(), imp.getNFrames()))
+    IJ.run("Collect Garbage")
+    return imp
 	
 ## TrackMate with LAP tracker
 
-def run_trackmate(imp, channel, min_iou, scale_factor, iou_method):
+def run_trackmate(imp, channel):
 	print('Starting TrackMate...')
 	model = Model()
 	model.setLogger(Logger.IJ_LOGGER)
@@ -172,11 +180,15 @@ def export_label_image(trackmate, imp_ref, path):
     
 # ---- Run ----
 
+start_time = time.time()
+base, ext = os.path.splitext(os.path.basename(str(myInputFile)))
 imp = open_image(str(myInputFile))
-tm, model  = run_trackmate(imp, detectorChannel, minIoU, scaleFactor, iouMethod)
-save_trackmate_xml(model, tm.getSettings(), os.path.join(str(myOutputDir), outputName + "_trackmate.xml"))
-export_label_image(tm, imp, os.path.join(str(myOutputDir), outputName + "_labels.tif"))
-print("Done.")
+imp = swap_zt(imp)
+tm, model  = run_trackmate(imp, detectorChannel)
+save_trackmate_xml(model, tm.getSettings(), os.path.join(str(myOutputDir), base + "_trackmate.xml"))
+export_label_image(tm, imp, os.path.join(str(myOutputDir), base + "_labels.tif"))
+
+
 
 #----------------
 # Display results
@@ -196,7 +208,7 @@ displayer.render()
 displayer.refresh()
 
 # Export all spots
-out_file_csv = "all_spots.csv"
+out_file_csv = base + "_all_spots.csv"
 only_visible = False # Export only visible 
 # If you set this flag to False, it will include all the spots,
 # the ones not in tracks, and the ones not visible.
@@ -205,16 +217,23 @@ CSVExporter.exportSpots(os.path.join(str(myOutputDir),out_file_csv), model, only
 # Spot table. Will contain only the spots that are in visible tracks.
 spots_in_tracks_table = TrackTableView.createSpotTable( model, ds )
 #spot_table_csv_file = File( input_filename.replace( '.xml', '-spots.csv' ) )
-spots_in_tracks_name = "tracked_spots.csv"
+spots_in_tracks_name = base + "_tracked_spots.csv"
 spots_in_tracks_file = File(os.path.join(str(myOutputDir),spots_in_tracks_name))
 spots_in_tracks_table.exportToCsv( spots_in_tracks_file )
 
 # Track table.
 track_table = TrackTableView.createTrackTable( model, ds )
-tracks_name = "tracks.csv"
+tracks_name = base + "_tracks.csv"
 track_table_csv_file = File(os.path.join(str(myOutputDir),tracks_name))
 track_table.exportToCsv( track_table_csv_file )
 
-
 # Echo results with the logger we set at start:
 model.getLogger().log( str( model ) )
+
+close_original(imp)
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+
+print("Finished in %s seconds." % elapsed_time)
+
