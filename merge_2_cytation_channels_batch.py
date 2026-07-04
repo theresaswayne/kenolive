@@ -4,7 +4,7 @@
 #@ String  (label = "C1 name contains", value = "GFP") C1name
 #@ String  (label = "C2 name contains", value = "Red") C2name
 
-# merge exactly 3 channels
+# merge exactly 2 channels
 # limitations: not recursive
 
 # ---- Setup ----
