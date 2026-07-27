@@ -1,0 +1,3 @@
+ 
+
+python -m cellpose --dir "/Volumes/CSMSR_Pon1/Pon projects 1/Cue5/2026-07 trans images for cellpose" --pretrained_model cyto3 --save_png --chan 0 --diameter 60 --verbose 
