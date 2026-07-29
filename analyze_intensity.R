@@ -26,7 +26,7 @@ time_summary <- df_mod %>%
 # generate filename from image name
 outputName = paste(dataName,"population_means.csv", sep = "_")
 # write CSV file
-write_csv(joined,outputName)
+write_csv(time_summary,outputName)
 
 # plot 
 
