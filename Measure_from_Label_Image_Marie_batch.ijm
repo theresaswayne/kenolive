@@ -201,7 +201,7 @@ function processFile(inputImageDir, inputLabelDir, imageSuffix, labelSuffix, out
 	numROIs = roiManager("count");
 	print("After editing the labels, there are",numROIs, "ROIs");
 	
-	// ---------- DOCUMENT ROI LOCATIONS
+	// ---------- DOCUMENT ROI LOCATIONS  TODO: Report / resolve bug where all ROIs are drawn -- or work around by using only 1st slice of label image
 
 	selectWindow("image");
 	
@@ -254,7 +254,7 @@ function processFile(inputImageDir, inputLabelDir, imageSuffix, labelSuffix, out
 	rgbID = getImageID(); // current image, should be the RGB or the duplicate
 	selectImage(rgbID);
 	
-	// display ROIs on the image -- TODO: Report / resolve bug where all ROIs are drawn
+	// display ROIs on the image -- 
 	RoiManager.associateROIsWithSlices(true);
 	roiManager("Show All"); // if this is not selected 
 	RoiManager.selectPosition(0, 0, 1); // select all ROIs from frame 1 irrespective of channel or slice
