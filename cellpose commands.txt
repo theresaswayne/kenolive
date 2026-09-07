@@ -1,0 +1,35 @@
+bash Miniforge3-$(theresaswayne)-$(uname -m).sh
+
+source <path to conda>/bin/activate
+source /Users/theresaswayne/miniforge3/bin/activate
+
+python -m cellpose --dir ~/Desktop/input/ --pretrained_model cpsam --save_tif --chan 0 --use_gpu --gpu_device mps --verbose
+
+python -m cellpose --dir ~/Desktop/input/ --pretrained_model cyto3 --save_tif --chan 0 --use_gpu --gpu_device mps --verbose 
+ 
+python -m cellpose --dir '/Volumes/TS_Current/Marie cytation/260717 test input' --pretrained_model cpsam --save_tif --chan 1 --use_gpu --gpu_device mps --verbose 
+
+ /Volumes/TS_Current/Marie\ cytation/260717\ test\ input
+ 
+ python -m cellpose --dir '/Users/theresaswayne/Desktop/output/split stack/c1' --pretrained_model cpsam --save_tif --chan 0 --use_gpu --gpu_device mps --verbose 
+
+ '/Users/theresaswayne/Desktop/output/split stack/c1' 
+ 
+ NOTE do not use the GPU Device MPS flag beacuse it blocks gpu!
+ 
+ /Users/theresaswayne/Desktop/output/batch\ split/batch\ c2    
+  python -m cellpose --dir '/Users/theresaswayne/Desktop/input/merged input/C2' --pretrained_model cpsam --save_tif --chan 0 --use_gpu --verbose 
+
+
+ /Users/theresaswayne/Desktop/input/merged input/C2      
+ 
+ channels=[0, 0]
+ 
+python -m cellpose --dir '/Volumes/TS_Current/Marie cytation/cellpose_test/all chans' --pretrained_model cpsam --save_tif --use_gpu --verbose 
+
+/Users/theresaswayne/Desktop/input/merged input/all_chans reordered hs 
+
+/Volumes/TS_Current/Marie cytation/cellpose_test/c1-2 only 
+/Volumes/TS_Current/Marie cytation/cellpose_test/all chans
+
+python -m cellpose --dir '/Volumes/TS_Current/Marie cytation/260717 merged shad corr 2 chan/To Do' --pretrained_model cpsam_v2 --save_tif --save_rois --use_gpu --verbose 
