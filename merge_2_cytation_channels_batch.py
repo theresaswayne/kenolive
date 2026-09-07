@@ -1,8 +1,8 @@
 #@ File (label = "Input directory", style = "directory") inDir
 #@ File (label = "Output directory", style = "directory") outDir
 #@ String(label="Image File Extension", required=false, value=".tif") image_extension
-#@ String  (label = "C1 name contains", value = "GFP") C1name
-#@ String  (label = "C2 name contains", value = "Red") C2name
+#@ String  (label = "C1 name contains", value = "RFP") C1name
+#@ String  (label = "C2 name contains", value = "GFP") C2name
 
 # merge exactly 2 channels
 # limitations: not recursive

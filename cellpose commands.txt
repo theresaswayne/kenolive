@@ -32,4 +32,4 @@ python -m cellpose --dir '/Volumes/TS_Current/Marie cytation/cellpose_test/all c
 /Volumes/TS_Current/Marie cytation/cellpose_test/c1-2 only 
 /Volumes/TS_Current/Marie cytation/cellpose_test/all chans
 
-python -m cellpose --dir '/Volumes/TS_Current/Marie cytation/260717 merged shad corr 2 chan/To Do' --pretrained_model cpsam_v2 --save_tif --save_rois --use_gpu --verbose 
+python -m cellpose --dir '/Volumes/TS_Current/Marie Hasselluhn/2026-08-19 merged' --pretrained_model cpsam_v2 --save_png --use_gpu --verbose 
