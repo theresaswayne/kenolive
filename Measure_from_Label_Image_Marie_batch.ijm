@@ -1,10 +1,10 @@
 //@File(label = "Input image directory", style = "directory") inputImageDir
 //@ File (label="Input label image directory",style="directory") inputLabelDir
-//@String (label = "Image file suffix", value = ".tif") imageSuffix
-//@ String (label = "Label image suffix",value = "_cp_masks.png") labelSuffix
+//@String (label = "Image file suffix", value = "_merge.tif") imageSuffix
+//@ String (label = "Label image suffix",value = "_cp_masks.tif") labelSuffix
 //@File(label = "Output snapshot folder:", style = "directory") outputImageDir
 //@File(label = "Output ROI and measurement folder:", style = "directory") outputRoiDir
-//@Integer(label = "Minimum area for objects (scaled units):", value = 10) minSize
+//@Integer(label = "Minimum area for objects (scaled units):", value = 550) minSize
 
 // measure_from_label_image_marie_batch.ijm
 // ImageJ/Fiji macro by Theresa Swayne, Columbia University, 2025-26
@@ -31,6 +31,7 @@
 // -- sets time interval of 2 hr (7200 sec) 
 
 // LIMITATIONS: Drawing ROIs currently produces all ROIs rather than just one slice
+// Image and label suffixes must be mutually exclusive
 
 // ---- Setup ----
 
@@ -247,7 +248,7 @@ function processFile(inputImageDir, inputLabelDir, imageSuffix, labelSuffix, out
 		run("Stack to RGB", "keep"); // create a single RGB image while keeping the original
 	}
 	else {
-		print("Creating overlay from single channel image"
+		print("Creating overlay from single channel image");
 	//	run("Duplicate...", "title=copy duplicate"); // for single-channel non-RGB images; Flatten doesn't create new window
 		run("Duplicate...", "title=copy"); // for single-channel non-RGB images; Flatten doesn't create new window
 	}
@@ -350,6 +351,10 @@ function processFile(inputImageDir, inputLabelDir, imageSuffix, labelSuffix, out
 	roiManager("Reset");
 	run("Clear Results");
 
+	if (isOpen("label")) {
+		selectImage("label");
+		close();
+	}
 	// extra cleanup step
 	while (nImages > 0) { // clean up open images
 		selectImage(nImages);

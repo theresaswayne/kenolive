@@ -4,12 +4,12 @@
 require(tidyverse)
 require(ggplot2)
 
-dataName = "260717"
+dataName = "260819"
 
 # assumes we have 2 dataframes, C1 and C2, derived from ImageJ measurements
 
 # rename dummy "...1" column (ImageJ does not provide a header)
-C1_mod <- rename(C1, "Measurement" = `...2`) # may be ...1 if only a single dataset is used
+C1_mod <- rename(C1, "Measurement" = `...2`) # may be ...1 if only a single dataset is used, or `...2` if a combined dataset
 C2_mod <- rename(C2, "Measurement" = `...2`)
 
 # remove the channel columns

@@ -6,6 +6,8 @@
 # Assumes C1 = RFP, C2 = GFP
 # Assumes each timepoint = 2 hr
 
+dataName = "260819"
+
 # get Well from image names
 well <- substr(df$Label, 0, 2) # supports only single digit numbers!
 
