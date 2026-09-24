@@ -1,4 +1,4 @@
-# analyze intensity over time and well
+# commands to analyze intensity over time and well
 
 # assumes a dataframe df containing 2 channels of mean intensity data
 # over multiple timepoints and multiple wells
